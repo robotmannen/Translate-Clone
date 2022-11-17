@@ -40,36 +40,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String dropdownvalueleft = 'Suomi';
-  String dropdownvalueright = 'Norsk';
-  var items = [
-    'Suomi',
-    'Norsk',
-    'Item 3',
-    'Item 4',
-    'Item 5',
+  String untranslatedLanguage = 'English';
+  String translatedLanguage = 'Russian';
+
+  List<String> languageList = [
+    'English',
+    'German',
+    'French',
+    'Dutch',
+    'Norwegian',
+    'Russian',
+    'Swedish'
   ];
-  void translation() async {
+  Map<String, String> languageMap = {
+    'English': 'en',
+    'German': 'de',
+    'French': 'fr',
+    'Dutch': 'nl',
+    'Norwegian': 'nor',
+    'Russian': 'ru',
+    'Swedish': 'swe'
+  };
+
+  void translation(String language) async {
+    String translated = "";
+
     //TODO: add language support for: English, German, French, Dutch, Norwegian, Russian, Swedish (æsj).
     final translator = GoogleTranslator();
 
-    final input = "Здравствуйте. Ты в порядке?";
-
-    translator.translate(input, from: 'ru', to: 'en').then(print);
-    // prints Hello. Are you okay?
-
-    var translation = await translator.translate("Dart is very cool!", to: 'pl');
-    print(translation);
-    // prints Dart jest bardzo fajny!
-
-    print(await "example".translate(to: 'pt'));
-    // prints exemplo
+    translator
+        .translate(language,
+            from: languageMap[untranslatedLanguage] ?? "",
+            to: languageMap[translatedLanguage] ?? "")
+        .then(
+          (value) => translated = value.text,
+        );
   }
-
 
   @override
   Widget build(BuildContext context) {
-    translation();
+    //Testing if translator works
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -82,9 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropdownButton(
-                  value: dropdownvalueleft,
+                  value: untranslatedLanguage,
                   icon: const Icon(Icons.keyboard_arrow_down),
-                  items: items.map((String items) {
+                  items: languageList.map((String items) {
                     return DropdownMenuItem(
                       value: items,
                       child: Text(items),
@@ -92,14 +103,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      dropdownvalueleft = newValue!;
+                      untranslatedLanguage = newValue!;
                     });
                   },
                 ),
                 DropdownButton(
-                  value: dropdownvalueright,
+                  value: translatedLanguage,
                   icon: const Icon(Icons.keyboard_arrow_down),
-                  items: items.map((String items) {
+                  items: languageList.map((String items) {
                     return DropdownMenuItem(
                       value: items,
                       child: Text(items),
@@ -107,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      dropdownvalueright = newValue!;
+                      translatedLanguage = newValue!;
                     });
                   },
                 ),
@@ -118,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
           TextField(
             keyboardType: TextInputType.multiline,
             maxLines: 7,
+            onChanged: (value) => print(value),
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -127,12 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
               fillColor: Colors.white,
             ),
           ),
+          const Divider(),
           DecoratedBox(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               border: Border.all(width: 1.0, color: Colors.grey),
             ),
-            child: Text("German"),
+            child: Text(translatedLanguage),
           ),
         ],
       ),
