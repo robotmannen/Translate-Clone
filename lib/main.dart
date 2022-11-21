@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:translator/translator.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,7 +9,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,25 +23,20 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
 class _MyHomePageState extends State<MyHomePage> {
+  final translator = GoogleTranslator();
+
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
+  String translatedString = "";
+  List<String> recentTranslations = [];
 
   List<String> languageList = [
     'English',
@@ -57,30 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
     'German': 'de',
     'French': 'fr',
     'Dutch': 'nl',
-    'Norwegian': 'nor',
+    'Norwegian': 'no',
     'Russian': 'ru',
-    'Swedish': 'swe'
+    'Swedish': 'sw'
   };
-
-  void translation(String language) async {
-    String translated = "";
-
-    //TODO: add language support for: English, German, French, Dutch, Norwegian, Russian, Swedish (æsj).
-    final translator = GoogleTranslator();
-
-    translator
-        .translate(language,
-            from: languageMap[untranslatedLanguage] ?? "",
-            to: languageMap[translatedLanguage] ?? "")
-        .then(
-          (value) => translated = value.text,
-        );
-  }
 
   @override
   Widget build(BuildContext context) {
-    //Testing if translator works
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -127,14 +105,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const Divider(),
           TextField(
+            textInputAction: TextInputAction.go,
             keyboardType: TextInputType.multiline,
             maxLines: 7,
-            onChanged: (value) => print(value),
+            onChanged: (value) {
+              _debouncer(value);
+            },
+            onSubmitted: ((value) {
+              setState(() {
+                recentTranslations.add(value);
+              });
+            }),
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: "Hei",
+              hintText: "Write something ...",
               filled: true,
               fillColor: Colors.white,
             ),
@@ -145,10 +131,37 @@ class _MyHomePageState extends State<MyHomePage> {
               shape: BoxShape.rectangle,
               border: Border.all(width: 1.0, color: Colors.grey),
             ),
-            child: Text(translatedLanguage),
+            child: Text(translatedString),
           ),
         ],
       ),
     );
+  }
+
+  void _debouncer(String query) {
+    EasyDebounce.debounce('translation-debouncer',
+        const Duration(milliseconds: 500), () => _translation(query));
+  }
+
+  void _translation(String input) async {
+    if (input.isNotEmpty) {
+      translator
+          .translate(input,
+          from: languageMap[untranslatedLanguage] ?? "",
+          to: languageMap[translatedLanguage] ?? "")
+          .then(
+            (value) {
+          setState(() {
+            print(value.text);
+            translatedString = value.text;
+          },
+          );
+        },
+      );
+    } else {
+      setState(() {
+        translatedString = "";
+      });
+    }
   }
 }
