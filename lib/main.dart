@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:translate_clone/RecentTranslation.dart';
 import 'package:translator/translator.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,12 +37,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
-  LinkedList<RecentTranslation> recentTranslationsLinkedList = LinkedList<RecentTranslation>();
+  LinkedList<RecentTranslation> recentTranslationsLinkedList =
+      LinkedList<RecentTranslation>();
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
   String translatedString = "";
-
-  //List<String> recentTranslations = [];
 
   List<String> languageList = [
     'English',
@@ -49,7 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
     'Dutch',
     'Norwegian',
     'Russian',
-    'Swedish'
+    'Swedish',
+    'Icelandic',
+    'Spanish'
   ];
   Map<String, String> languageMap = {
     'English': 'en',
@@ -58,86 +61,116 @@ class _MyHomePageState extends State<MyHomePage> {
     'Dutch': 'nl',
     'Norwegian': 'no',
     'Russian': 'ru',
-    'Swedish': 'sw'
+    'Swedish': 'sv',
+    'Icelandic': 'is',
+    'Spanish': 'es'
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: GoogleFonts.actor(),
+        ),
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownButton(
-                  value: untranslatedLanguage,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  items: languageList.map((String items) {
-                    return DropdownMenuItem(
-                      value: items,
-                      child: Text(items),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      untranslatedLanguage = newValue!;
-                    });
-                  },
-                ),
-                DropdownButton(
-                  value: translatedLanguage,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  items: languageList.map((String items) {
-                    return DropdownMenuItem(
-                      value: items,
-                      child: Text(items),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      translatedLanguage = newValue!;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
-          TextField(
-            textInputAction: TextInputAction.go,
-            keyboardType: TextInputType.multiline,
-            maxLines: 7,
-            onChanged: (value) {
-              _debouncer(value);
-            },
-            onSubmitted: ((value) {
-              setState(() {
-                recentTranslationsLinkedList.add(RecentTranslation(value, translatedString));
-              });
-            }),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  DropdownButton(
+                    value: untranslatedLanguage,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: languageList.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        untranslatedLanguage = newValue!;
+                        recentTranslationsLinkedList.add(
+                            RecentTranslation(const Uuid(), "hei", "på deg"));
+                        print(recentTranslationsLinkedList.first);
+                      });
+                    },
+                  ),
+                  const Icon(Icons.rotate_left_rounded),
+                  DropdownButton(
+                    value: translatedLanguage,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: languageList.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        translatedLanguage = newValue!;
+                      });
+                    },
+                  ),
+                ],
               ),
-              hintText: "Write something ...",
-              filled: true,
-              fillColor: Colors.white,
             ),
-          ),
-          const Divider(),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              border: Border.all(width: 1.0, color: Colors.grey),
+            const Divider(),
+            TextField(
+              textInputAction: TextInputAction.go,
+              keyboardType: TextInputType.multiline,
+              maxLines: 7,
+              onChanged: (value) {
+                _debouncer(value);
+              },
+              onSubmitted: ((value) {
+                setState(() {
+                  recentTranslationsLinkedList.add(
+                      RecentTranslation(const Uuid(), value, translatedString));
+                });
+              }),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                hintText: "Write something ...",
+                filled: true,
+                fillColor: Colors.white,
+              ),
             ),
-            child: Text(translatedString),
-          ),
-        ],
+            const Divider(),
+            Container(
+              width: double.maxFinite,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.rectangle, color: Colors.blue),
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(translatedLanguage,
+                          style: const TextStyle(color: Colors.white70)),
+                      IconButton(
+                        icon: const Icon(Icons.star_outline, color: Colors.white),
+                        onPressed: () => print('favourited'),
+                      ),
+                    ],
+                  ),
+                  Text(translatedString,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 20.0))
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -159,7 +192,6 @@ class _MyHomePageState extends State<MyHomePage> {
             to: languageMap[translatedLanguage] ?? "")
         .then((value) {
       setState(() {
-        print(value.text);
         translatedString = value.text;
       });
     });
