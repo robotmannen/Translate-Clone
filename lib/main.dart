@@ -1,4 +1,6 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:translate_clone/RecentTranslation.dart';
 import 'package:translator/translator.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 
@@ -23,20 +25,22 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
+  LinkedList<RecentTranslation> recentTranslationsLinkedList = LinkedList<RecentTranslation>();
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
   String translatedString = "";
-  List<String> recentTranslations = [];
+
+  //List<String> recentTranslations = [];
 
   List<String> languageList = [
     'English',
@@ -113,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             onSubmitted: ((value) {
               setState(() {
-                recentTranslations.add(value);
+                recentTranslationsLinkedList.add(RecentTranslation(value, translatedString));
               });
             }),
             decoration: InputDecoration(
@@ -144,24 +148,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _translation(String input) async {
-    if (input.isNotEmpty) {
-      translator
-          .translate(input,
-          from: languageMap[untranslatedLanguage] ?? "",
-          to: languageMap[translatedLanguage] ?? "")
-          .then(
-            (value) {
-          setState(() {
-            print(value.text);
-            translatedString = value.text;
-          },
-          );
-        },
-      );
-    } else {
+    if (input == "") {
       setState(() {
         translatedString = "";
       });
     }
+    translator
+        .translate(input,
+            from: languageMap[untranslatedLanguage] ?? "",
+            to: languageMap[translatedLanguage] ?? "")
+        .then((value) {
+      setState(() {
+        print(value.text);
+        translatedString = value.text;
+      });
+    });
   }
 }
