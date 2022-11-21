@@ -147,8 +147,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               width: double.maxFinite,
               decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle, color: Colors.blue),
-              padding: const EdgeInsets.all(15),
+                  shape: BoxShape.rectangle,
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -158,7 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       Text(translatedLanguage,
                           style: const TextStyle(color: Colors.white70)),
                       IconButton(
-                        icon: const Icon(Icons.star_outline, color: Colors.white),
+                        icon:
+                            const Icon(Icons.star_outline, color: Colors.white),
                         onPressed: () => print('favourited'),
                       ),
                     ],
