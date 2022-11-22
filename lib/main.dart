@@ -1,10 +1,9 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:translate_clone/RecentTranslation.dart';
+import 'package:translate_clone/DataTypes.dart';
 import 'package:translator/translator.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +24,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -37,8 +38,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
-  LinkedList<RecentTranslation> recentTranslationsLinkedList =
-      LinkedList<RecentTranslation>();
+  LinkedList<RecentTranslationItem> recentTranslationsLinkedList =
+      LinkedList<RecentTranslationItem>();
+
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
   String translatedString = "";
@@ -65,9 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
     'Icelandic': 'is',
     'Spanish': 'es'
   };
+  final items = List<ListItem>.generate(1000, (i) => TestItem('Heading $i'));
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -95,12 +100,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (String? newValue) {
                       setState(() {
                         untranslatedLanguage = newValue!;
-                        recentTranslationsLinkedList.add(
-                            RecentTranslation(const Uuid(), "hei", "på deg"));
+                        recentTranslationsLinkedList
+                            .add(RecentTranslationItem("hei", "på deg"));
                         print(recentTranslationsLinkedList.first);
                       });
                     },
                   ),
+
+                  // Swaps the two selected languages
                   IconButton(
                     icon: const Icon(Icons.rotate_left_rounded),
                     onPressed: () {
@@ -140,8 +147,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onSubmitted: ((value) {
                 setState(() {
-                  recentTranslationsLinkedList.add(
-                      RecentTranslation(const Uuid(), value, translatedString));
+                  recentTranslationsLinkedList
+                      .add(RecentTranslationItem(value, translatedString));
                 });
               }),
               decoration: InputDecoration(
@@ -182,6 +189,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            Container(
+              width: double.maxFinite,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(),
+            )
           ],
         ),
       ),
