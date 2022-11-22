@@ -101,7 +101,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                   ),
-                  const Icon(Icons.rotate_left_rounded),
+                  IconButton(
+                    icon: const Icon(Icons.rotate_left_rounded),
+                    onPressed: () {
+                      String temp;
+                      setState(() {
+                        temp = translatedLanguage;
+                        translatedLanguage = untranslatedLanguage;
+                        untranslatedLanguage = temp;
+                      });
+                    },
+                  ),
                   DropdownButton(
                     value: translatedLanguage,
                     icon: const Icon(Icons.keyboard_arrow_down),
