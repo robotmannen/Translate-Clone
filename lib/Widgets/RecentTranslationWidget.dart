@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class RecentTranslation extends StatelessWidget {
-  final String header;
+  final String translatedString;
 
-  RecentTranslation(this.header);
+  RecentTranslation({required this.translatedString});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class RecentTranslation extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
               border: Border.all(width: 1, color: Colors.black)),
           padding: const EdgeInsets.all(15.0),
-          child: Text(header)),
+          child: Text(translatedString)),
     );
   }
 }

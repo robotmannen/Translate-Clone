@@ -42,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
+  String untranslatedString = "";
   String translatedString = "";
 
   List<String> languageList = [
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   };
 
   final items = List<ListItem>.generate(10, (i) => TestItem(heading: "Header"));
-  final test = List<String>.generate(10, (index) => "Hello $index");
+  final test = [];
 
   @override
   Widget build(BuildContext context) {
@@ -76,65 +77,63 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: GoogleFonts.actor(),
+          style: GoogleFonts.aBeeZee(),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  DropdownButton(
-                    value: untranslatedLanguage,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items: languageList.map((String items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(items),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        untranslatedLanguage = newValue!;
-                        recentTranslationsLinkedList
-                            .add(RecentTranslationItem("hei", "på deg"));
-                        print(recentTranslationsLinkedList.first);
-                      });
-                    },
-                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DropdownButton(
+                  value: untranslatedLanguage,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  items: languageList.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      untranslatedLanguage = newValue!;
+                      recentTranslationsLinkedList
+                          .add(RecentTranslationItem("hei", "på deg"));
+                      print(recentTranslationsLinkedList.first);
+                    });
+                  },
+                ),
 
-                  // Swaps the two selected languages
-                  IconButton(
-                    icon: const Icon(Icons.rotate_left_rounded),
-                    onPressed: () {
-                      String temp;
-                      setState(() {
-                        temp = translatedLanguage;
-                        translatedLanguage = untranslatedLanguage;
-                        untranslatedLanguage = temp;
-                      });
-                    },
-                  ),
-                  DropdownButton(
-                    value: translatedLanguage,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items: languageList.map((String items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(items),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        translatedLanguage = newValue!;
-                      });
-                    },
-                  ),
-                ],
-              ),
+                // Swaps the two selected languages
+                IconButton(
+                  icon: const Icon(Icons.swap_horizontal_circle_outlined),
+                  onPressed: () {
+                    String temp;
+                    setState(() {
+                      temp = translatedLanguage;
+                      translatedLanguage = untranslatedLanguage;
+                      untranslatedLanguage = temp;
+                    });
+                  },
+                ),
+                DropdownButton(
+                  value: translatedLanguage,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  items: languageList.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      translatedLanguage = newValue!;
+                    });
+                  },
+                ),
+              ],
             ),
             const Divider(),
             TextField(
@@ -146,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onSubmitted: ((value) {
                 setState(() {
+                  test.add(value.trim());
                   recentTranslationsLinkedList
                       .add(RecentTranslationItem(value, translatedString));
                 });
@@ -182,18 +182,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
-                  Text(translatedString,
-                      style:
-                          const TextStyle(color: Colors.white, fontSize: 20.0))
+                  Text(
+                    translatedString,
+                    style: const TextStyle(color: Colors.white, fontSize: 20.0),
+                  ),
+                  Text(untranslatedString)
                 ],
               ),
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    return RecentTranslation("Header $index");
-                  }),
+                itemCount: test.length,
+                itemBuilder: (context, index) {
+                  return RecentTranslation(translatedString: test[index]);
+                },
+              ),
             ),
           ],
         ),
@@ -202,8 +205,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _debouncer(String query) {
-    EasyDebounce.debounce('translation-debouncer',
-        const Duration(milliseconds: 500), () => _translation(query));
+    EasyDebounce.debounce(
+        'translation-debouncer', const Duration(milliseconds: 500), () {
+      _translation(query);
+      untranslatedString = query;
+    });
   }
 
   void _translation(String input) async {
