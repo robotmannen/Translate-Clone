@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:translate_clone/DataTypes.dart';
+import 'package:translate_clone/Widgets/RecentTranslationWidget.dart';
 import 'package:translator/translator.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,8 +24,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -67,12 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
     'Icelandic': 'is',
     'Spanish': 'es'
   };
-  final items = List<ListItem>.generate(1000, (i) => TestItem('Heading $i'));
+
+  final items = List<ListItem>.generate(10, (i) => TestItem(heading: "Header"));
+  final test = List<String>.generate(10, (index) => "Hello $index");
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -189,14 +188,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            Container(
-              width: double.maxFinite,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              padding: const EdgeInsets.all(15.0),
-              child: Column(),
-            )
+            Expanded(
+              child: ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return RecentTranslation("Header $index");
+                  }),
+            ),
           ],
         ),
       ),

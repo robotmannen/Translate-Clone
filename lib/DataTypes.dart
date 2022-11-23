@@ -12,7 +12,7 @@ abstract class ListItem {
 class TestItem implements ListItem {
   final String heading;
 
-  TestItem(this.heading);
+  TestItem({required this.heading});
 
   @override
   Widget buildSubtitle(BuildContext context) {
