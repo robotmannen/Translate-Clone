@@ -29,7 +29,7 @@ class TestItem implements ListItem {
   }
 }
 
-class RecentTranslationItem extends LinkedListEntry<RecentTranslationItem> {
+class RecentTranslationItem {
   final Uuid id = const Uuid();
   final String untranslated;
   final String translated;

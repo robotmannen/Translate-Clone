@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:translate_clone/DataTypes.dart';
 import 'package:translate_clone/Widgets/RecentTranslationWidget.dart';
@@ -37,8 +36,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
-  LinkedList<RecentTranslationItem> recentTranslationsLinkedList =
-      LinkedList<RecentTranslationItem>();
 
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
@@ -68,8 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'Spanish': 'es'
   };
 
-  final items = List<ListItem>.generate(10, (i) => TestItem(heading: "Header"));
-  final test = [];
+  List<RecentTranslationItem> recentTranslations = [];
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   onChanged: (String? newValue) {
                     setState(() {
                       untranslatedLanguage = newValue!;
-                      recentTranslationsLinkedList
-                          .add(RecentTranslationItem("hei", "på deg"));
-                      print(recentTranslationsLinkedList.first);
                     });
                   },
                 ),
@@ -145,9 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onSubmitted: ((value) {
                 setState(() {
-                  test.add(value.trim());
-                  recentTranslationsLinkedList
-                      .add(RecentTranslationItem(value, translatedString));
+                  recentTranslations.add(RecentTranslationItem(value.trim(), translatedString));
                 });
               }),
               decoration: InputDecoration(
@@ -192,9 +183,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: test.length,
+                itemCount: recentTranslations.length,
                 itemBuilder: (context, index) {
-                  return RecentTranslation(translatedString: test[index]);
+                  return RecentTranslation(recentTranslationItem: recentTranslations[index],);
                 },
               ),
             ),
