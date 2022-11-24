@@ -23,7 +23,13 @@ class RecentTranslation extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(recentTranslationItem.translated),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(recentTranslationItem.translated),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.star_outline))
+                ],
+              ),
               Text(recentTranslationItem.untranslated)
             ],
           )),

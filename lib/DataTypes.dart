@@ -5,7 +5,6 @@ import 'package:uuid/uuid.dart';
 
 abstract class ListItem {
   Widget buildTitle(BuildContext context);
-
   Widget buildSubtitle(BuildContext context);
 }
 
@@ -33,6 +32,7 @@ class RecentTranslationItem {
   final Uuid id = const Uuid();
   final String untranslated;
   final String translated;
+  final bool isFavourite = false;
 
   RecentTranslationItem(this.untranslated, this.translated);
 

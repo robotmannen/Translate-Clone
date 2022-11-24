@@ -36,7 +36,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
-
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
   String untranslatedString = "";
@@ -98,7 +97,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                   },
                 ),
-
                 // Swaps the two selected languages
                 IconButton(
                   icon: const Icon(Icons.swap_horizontal_circle_outlined),
@@ -138,7 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onSubmitted: ((value) {
                 setState(() {
-                  recentTranslations.add(RecentTranslationItem(value.trim(), translatedString));
+                  recentTranslations.add(
+                      RecentTranslationItem(value.trim(), translatedString));
                 });
               }),
               decoration: InputDecoration(
@@ -165,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(translatedLanguage,
-                          style: const TextStyle(color: Colors.white70)),
+                          style: const TextStyle(color: Colors.white70, )),
                       IconButton(
                         icon:
                             const Icon(Icons.star_outline, color: Colors.white),
@@ -185,7 +184,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListView.builder(
                 itemCount: recentTranslations.length,
                 itemBuilder: (context, index) {
-                  return RecentTranslation(recentTranslationItem: recentTranslations[index],);
+                  return RecentTranslation(
+                    recentTranslationItem: recentTranslations[index],
+                  );
                 },
               ),
             ),
