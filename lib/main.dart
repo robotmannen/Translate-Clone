@@ -135,8 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onSubmitted: ((value) {
                 setState(() {
-                  recentTranslations.add(
-                      RecentTranslationItem(value.trim(), translatedString, false));
+                  recentTranslations.add(RecentTranslationItem(
+                      value.trim(), translatedString, false));
                 });
               }),
               decoration: InputDecoration(
@@ -149,41 +149,44 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const Divider(),
-            Container(
-              width: double.maxFinite,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(translatedLanguage,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                          )),
-                      IconButton(
-                        icon:
-                            const Icon(Icons.star_outline, color: Colors.white),
-                        onPressed: () => print('favourited'),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    translatedString,
-                    style: const TextStyle(color: Colors.white, fontSize: 20.0),
-                  ),
-                  Text(untranslatedString)
-                ],
+            Visibility(
+              visible: translatedString.isNotEmpty,
+              child: Container(
+                width: double.maxFinite,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(translatedLanguage,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                            )),
+                        IconButton(
+                          icon: const Icon(Icons.star_outline,
+                              color: Colors.white),
+                          onPressed: () => print('favourited'),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      translatedString,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 20.0),
+                    ),
+                    Text(untranslatedString)
+                  ],
+                ),
               ),
             ),
             Expanded(
               child: ListView.builder(
-                reverse: true,
                 itemCount: recentTranslations.length,
                 itemBuilder: (context, index) {
                   return RecentTranslation(
