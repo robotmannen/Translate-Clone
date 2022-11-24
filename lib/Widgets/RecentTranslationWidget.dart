@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:translate_clone/DataTypes.dart';
+import 'package:translate_clone/RecentTranslationItem.dart';
 
 class RecentTranslation extends StatefulWidget {
   RecentTranslationItem recentTranslationItem;
@@ -17,10 +17,10 @@ class _RecentTranslationState extends State<RecentTranslation> {
       padding: const EdgeInsets.only(top: 10.0),
       child: Container(
           width: double.maxFinite,
-          decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-              border: Border.all(width: 1, color: Colors.black)),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+          ),
           padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:translate_clone/DataTypes.dart';
+import 'package:translate_clone/RecentTranslationItem.dart';
 import 'package:translate_clone/Widgets/RecentTranslationWidget.dart';
 import 'package:translator/translator.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -36,11 +36,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
+  List<RecentTranslationItem> recentTranslations = [];
   String untranslatedLanguage = 'English';
   String translatedLanguage = 'Russian';
   String untranslatedString = "";
   String translatedString = "";
-  List<RecentTranslationItem> recentTranslations = [];
+
 
   List<String> languageList = [
     'English',
@@ -66,10 +67,19 @@ class _MyHomePageState extends State<MyHomePage> {
   };
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffededed),
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
+
           widget.title,
           style: GoogleFonts.aBeeZee(),
         ),
@@ -98,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 // Swaps the two selected languages
                 IconButton(
-                  icon: const Icon(Icons.swap_horizontal_circle_outlined),
+                  icon: const Icon(Icons.swap_horiz_rounded),
                   onPressed: () {
                     String temp;
                     setState(() {
