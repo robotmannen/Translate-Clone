@@ -13,40 +13,38 @@ class RecentTranslation extends StatefulWidget {
 class _RecentTranslationState extends State<RecentTranslation> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Container(
-          width: double.maxFinite,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-          ),
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      width: double.maxFinite,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+      ),
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(widget.recentTranslationItem.translated),
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          if (!widget.recentTranslationItem.isFavourite) {
-                            widget.recentTranslationItem.isFavourite = true;
-                          } else {
-                            widget.recentTranslationItem.isFavourite = false;
-                          }
-                        });
-                      },
-                      icon: Icon(widget.recentTranslationItem.isFavourite
-                          ? Icons.star
-                          : Icons.star_outline))
-                ],
-              ),
-              Text(widget.recentTranslationItem.untranslated)
+              Text(widget.recentTranslationItem.translated),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (!widget.recentTranslationItem.isFavourite) {
+                        widget.recentTranslationItem.isFavourite = true;
+                      } else {
+                        widget.recentTranslationItem.isFavourite = false;
+                      }
+                    });
+                  },
+                  icon: Icon(widget.recentTranslationItem.isFavourite
+                      ? Icons.star
+                      : Icons.star_outline))
             ],
-          )),
+          ),
+          Text(widget.recentTranslationItem.untranslated)
+        ],
+      ),
     );
   }
 }

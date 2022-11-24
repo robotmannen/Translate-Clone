@@ -42,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
   String untranslatedString = "";
   String translatedString = "";
 
-
   List<String> languageList = [
     'English',
     'German',
@@ -69,7 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -79,7 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-
           widget.title,
           style: GoogleFonts.aBeeZee(),
         ),
@@ -194,6 +191,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
+            ),
+            Visibility(
+              visible: translatedString.isNotEmpty,
+              child: const Divider(),
             ),
             Expanded(
               child: ListView.builder(
