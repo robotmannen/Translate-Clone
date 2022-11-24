@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:translate_clone/DataTypes.dart';
 
-class RecentTranslation extends StatelessWidget {
+class RecentTranslation extends StatefulWidget {
+  RecentTranslationItem recentTranslationItem;
 
-  final RecentTranslationItem recentTranslationItem;
+  RecentTranslation({super.key, required this.recentTranslationItem});
 
-  const RecentTranslation(
-      {super.key,
-      required this.recentTranslationItem});
+  @override
+  State<StatefulWidget> createState() => _RecentTranslationState();
+}
 
+class _RecentTranslationState extends State<RecentTranslation> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,11 +28,23 @@ class RecentTranslation extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(recentTranslationItem.translated),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.star_outline))
+                  Text(widget.recentTranslationItem.translated),
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (!widget.recentTranslationItem.isFavourite) {
+                            widget.recentTranslationItem.isFavourite = true;
+                          } else {
+                            widget.recentTranslationItem.isFavourite = false;
+                          }
+                        });
+                      },
+                      icon: Icon(widget.recentTranslationItem.isFavourite
+                          ? Icons.star
+                          : Icons.star_outline))
                 ],
               ),
-              Text(recentTranslationItem.untranslated)
+              Text(widget.recentTranslationItem.untranslated)
             ],
           )),
     );

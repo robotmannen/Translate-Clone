@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String translatedLanguage = 'Russian';
   String untranslatedString = "";
   String translatedString = "";
+  List<RecentTranslationItem> recentTranslations = [];
 
   List<String> languageList = [
     'English',
@@ -63,8 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
     'Icelandic': 'is',
     'Spanish': 'es'
   };
-
-  List<RecentTranslationItem> recentTranslations = [];
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onSubmitted: ((value) {
                 setState(() {
                   recentTranslations.add(
-                      RecentTranslationItem(value.trim(), translatedString));
+                      RecentTranslationItem(value.trim(), translatedString, false));
                 });
               }),
               decoration: InputDecoration(
@@ -164,7 +163,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(translatedLanguage,
-                          style: const TextStyle(color: Colors.white70, )),
+                          style: const TextStyle(
+                            color: Colors.white70,
+                          )),
                       IconButton(
                         icon:
                             const Icon(Icons.star_outline, color: Colors.white),
@@ -182,6 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: ListView.builder(
+                reverse: true,
                 itemCount: recentTranslations.length,
                 itemBuilder: (context, index) {
                   return RecentTranslation(
