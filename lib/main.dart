@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:translate_clone/RecentTranslationItem.dart';
-import 'package:translate_clone/Widgets/RecentTranslationWidget.dart';
+import 'package:translate_clone/Widgets/CurrentTranslation.dart';
+import 'package:translate_clone/Widgets/RecentTranslation.dart';
 import 'package:translator/translator.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,17 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
   String untranslatedString = "";
   String translatedString = "";
 
-  List<String> languageList = [
-    'English',
-    'German',
-    'French',
-    'Dutch',
-    'Norwegian',
-    'Russian',
-    'Swedish',
-    'Icelandic',
-    'Spanish'
-  ];
   Map<String, String> languageMap = {
     'English': 'en',
     'German': 'de',
@@ -92,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   isExpanded: false,
                   value: untranslatedLanguage,
                   icon: const Icon(Icons.keyboard_arrow_down),
-                  items: languageList.map((String items) {
+                  items: languageMap.keys.map((String items) {
                     return DropdownMenuItem(
                       value: items,
                       child: Text(items),
@@ -120,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   isExpanded: false,
                   value: translatedLanguage,
                   icon: const Icon(Icons.keyboard_arrow_down),
-                  items: languageList.map((String items) {
+                  items: languageMap.keys.map((String items) {
                     return DropdownMenuItem(
                       value: items,
                       child: Text(items),
@@ -160,38 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
             const Divider(),
             Visibility(
               visible: translatedString.isNotEmpty,
-              child: Container(
-                width: double.maxFinite,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(translatedLanguage,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                            )),
-                        IconButton(
-                          icon: const Icon(Icons.star_outline,
-                              color: Colors.white),
-                          onPressed: () => print('favourited'),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      translatedString,
-                      style:
-                          const TextStyle(color: Colors.white, fontSize: 20.0),
-                    ),
-                    Text(untranslatedString)
-                  ],
-                ),
+              child: CurrentTranslationWidget(
+                translatedString: translatedString,
+                translatedLanguage: translatedLanguage,
+                untranslatedString: untranslatedString,
               ),
             ),
             Visibility(
