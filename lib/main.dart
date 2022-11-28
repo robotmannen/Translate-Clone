@@ -89,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 DropdownButton(
+                  isExpanded: false,
                   value: untranslatedLanguage,
                   icon: const Icon(Icons.keyboard_arrow_down),
                   items: languageList.map((String items) {
@@ -116,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 DropdownButton(
+                  isExpanded: false,
                   value: translatedLanguage,
                   icon: const Icon(Icons.keyboard_arrow_down),
                   items: languageList.map((String items) {
@@ -142,11 +144,11 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onSubmitted: ((value) {
                 setState(() {
-                  recentTranslations.add(RecentTranslationItem(
-                      value.trim(), translatedString, false));
+                  _addToRecentTranslations(value);
                 });
               }),
               decoration: InputDecoration(
+                enabledBorder: InputBorder.none,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
@@ -212,9 +214,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _addToRecentTranslations(String value) {
+    var result = recentTranslations.where((element) =>
+        element.translated == translatedString &&
+        element.untranslated == untranslatedString);
+
+    if (result.isEmpty) {
+      recentTranslations
+          .add(RecentTranslationItem(value.trim(), translatedString, false));
+    }
+  }
+
   void _debouncer(String query) {
     EasyDebounce.debounce(
-        'translation-debouncer', const Duration(milliseconds: 500), () {
+        'translation_debouncer', const Duration(milliseconds: 500), () {
       _translation(query);
       untranslatedString = query;
     });
