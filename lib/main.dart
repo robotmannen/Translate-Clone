@@ -37,11 +37,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
-  List<RecentTranslationItem> recentTranslations = [];
-  String untranslatedLanguage = 'English';
-  String translatedLanguage = 'Russian';
-  String untranslatedString = "";
-  String translatedString = "";
+  late List<RecentTranslationItem> recentTranslations;
+  late String untranslatedLanguage;
+  late String translatedLanguage;
+  late String untranslatedString;
+  late String translatedString;
 
   Map<String, String> languageMap = {
     'English': 'en',
@@ -57,6 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    recentTranslations = [];
+    untranslatedLanguage = 'English';
+    translatedLanguage = 'Russian';
+    untranslatedString = "";
+    translatedString = "";
     super.initState();
   }
 
