@@ -208,8 +208,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     translator
         .translate(input,
-            from: languageMap[untranslatedLanguage] ?? "",
-            to: languageMap[translatedLanguage] ?? "")
+            from: languageMap[untranslatedLanguage] ?? "en",
+            to: languageMap[translatedLanguage] ?? "ru")
         .then((value) {
       setState(() {
         translatedString = value.text;
