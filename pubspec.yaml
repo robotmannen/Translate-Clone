@@ -42,6 +42,7 @@ dependencies:
   easy_debounce: ^2.0.2+1
   firebase_auth: ^4.1.3
   shared_preferences: ^2.0.15
+  rename: ^2.0.1
 
 dev_dependencies:
   flutter_test:

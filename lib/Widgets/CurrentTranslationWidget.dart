@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import '../TranslationItem.dart';
 
 class CurrentTranslationWidget extends StatefulWidget {
-  String translatedLanguage;
-  String untranslatedString;
-  String translatedString;
 
-  CurrentTranslationWidget(
-      {super.key,
-      required this.translatedLanguage,
-      required this.untranslatedString,
-      required this.translatedString});
+  final TranslationItem translationItem;
+  final String translatedLanguage;
+
+  final Function(bool) handleFavouriteOnPressed;
+
+  const CurrentTranslationWidget({super.key,
+    required this.translationItem,
+    required this.translatedLanguage,
+    required this.handleFavouriteOnPressed});
 
   @override
   State<CurrentTranslationWidget> createState() =>
@@ -37,19 +39,24 @@ class _CurrentTranslationWidgetState extends State<CurrentTranslationWidget> {
                     color: Colors.white70,
                   )),
               IconButton(
-                icon: const Icon(
-                  Icons.star_outline,
+                icon: Icon(
+                    widget.translationItem.isFavourite
+                        ? Icons.star
+                        : Icons.star_outline
                 ),
                 color: Colors.white,
-                onPressed: () => print('favourited'),
+                onPressed: () {
+                  widget.handleFavouriteOnPressed(
+                      widget.translationItem.isFavourite);
+                },
               ),
             ],
           ),
           Text(
-            widget.translatedString,
+            widget.translationItem.translated,
             style: const TextStyle(color: Colors.white, fontSize: 20.0),
           ),
-          Text(widget.untranslatedString)
+          Text(widget.translationItem.untranslated)
         ],
       ),
     );

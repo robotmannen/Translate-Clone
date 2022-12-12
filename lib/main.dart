@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:translate_clone/RecentTranslationItem.dart';
-import 'package:translate_clone/Widgets/CurrentTranslation.dart';
-import 'package:translate_clone/Widgets/RecentTranslation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:translate_clone/TranslationItem.dart';
+import 'package:translate_clone/Widgets/CurrentTranslationWidget.dart';
+import 'package:translate_clone/Widgets/RecentTranslationWidget.dart';
+import 'package:translate_clone/globals.dart';
 import 'package:translator/translator.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final translator = GoogleTranslator();
 
-  late List<RecentTranslationItem> recentTranslations;
+  List<TranslationItem> _recentTranslations = [];
   late String untranslatedLanguage;
   late String translatedLanguage;
   late String untranslatedString;
@@ -57,12 +59,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    recentTranslations = [];
+    super.initState();
+    _loadPrefs();
     untranslatedLanguage = 'English';
     translatedLanguage = 'Russian';
     untranslatedString = "";
     translatedString = "";
-    super.initState();
+  }
+
+  List<TranslationItem> get recentTranslations => _recentTranslations;
+
+  set recentTranslations(List<TranslationItem> value) {
+    _recentTranslations = value;
+  }
+
+  _setPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final String encodedTranslations =
+    TranslationItem.encode(_recentTranslations);
+    prefs.setString(TRANSLATIONS_KEY, encodedTranslations);
+  }
+
+  _loadPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final String? translationsString = prefs.getString(TRANSLATIONS_KEY);
+    final List<TranslationItem> recentTranslationsPrefs =
+    TranslationItem.decode(translationsString!);
+    setState(() {
+      _recentTranslations = recentTranslationsPrefs;
+    });
   }
 
   @override
@@ -156,9 +183,14 @@ class _MyHomePageState extends State<MyHomePage> {
             Visibility(
               visible: translatedString.isNotEmpty,
               child: CurrentTranslationWidget(
-                translatedString: translatedString,
+                translationItem: TranslationItem(
+                    untranslated: untranslatedString,
+                    translated: translatedString,
+                    isFavourite: false),
                 translatedLanguage: translatedLanguage,
-                untranslatedString: untranslatedString,
+                handleFavouriteOnPressed: (p0) {
+                  //TODO: handle favourite onPressed
+                },
               ),
             ),
             Visibility(
@@ -167,10 +199,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: recentTranslations.length,
+                itemCount: _recentTranslations.length,
                 itemBuilder: (context, index) {
-                  return RecentTranslation(
-                    recentTranslationItem: recentTranslations[index],
+                  return Dismissible(
+                    background: Container(color: Colors.red),
+                    key: UniqueKey(),
+                    onDismissed: (direction) {
+                      _recentTranslations.removeAt(index);
+                      _setPrefs();
+                    },
+                    child: RecentTranslationWidget(
+                      translationItem: _recentTranslations[index],
+                      handleFavouriteOnPressed: (p0) {
+                        setState(() {
+                          _recentTranslations[index].isFavourite = p0;
+                          _setPrefs();
+                        });
+                      },
+                    ),
                   );
                 },
               ),
@@ -182,13 +228,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addToRecentTranslations(String value) {
-    var result = recentTranslations.where((element) =>
-        element.translated == translatedString &&
+    var result = _recentTranslations.where((element) =>
+    element.translated == translatedString &&
         element.untranslated == untranslatedString);
 
     if (result.isEmpty) {
-      recentTranslations
-          .add(RecentTranslationItem(value.trim(), translatedString, false));
+      _recentTranslations.add(TranslationItem(
+          untranslated: value.trim(),
+          translated: translatedString,
+          isFavourite: false));
+      _setPrefs();
     }
   }
 
@@ -208,8 +257,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     translator
         .translate(input,
-            from: languageMap[untranslatedLanguage] ?? "en",
-            to: languageMap[translatedLanguage] ?? "ru")
+        from: languageMap[untranslatedLanguage] ?? "en",
+        to: languageMap[translatedLanguage] ?? "ru")
         .then((value) {
       setState(() {
         translatedString = value.text;
