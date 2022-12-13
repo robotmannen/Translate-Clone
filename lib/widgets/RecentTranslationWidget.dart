@@ -19,7 +19,6 @@ class _RecentTranslationWidgetState extends State<RecentTranslationWidget> {
     return Container(
       width: double.maxFinite,
       decoration: const BoxDecoration(
-        color: Colors.white,
         shape: BoxShape.rectangle,
       ),
       padding: const EdgeInsets.all(15.0),

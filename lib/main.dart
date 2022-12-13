@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:translate_clone/ThemeData.dart';
 import 'package:translate_clone/screens/home_page.dart';
 
 void main() {
@@ -19,8 +20,9 @@ class TranslateApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Translate',
-      theme: ThemeData(
-          primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
+      themeMode: ThemeMode.system,
+      theme: ThemeClass.lightTheme,
+      darkTheme: ThemeClass.darkTheme,
       home: const MyHomePage(title: 'Google Translator'),
     );
   }

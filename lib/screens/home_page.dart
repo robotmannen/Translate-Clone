@@ -44,8 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadPrefs();
     untranslatedLanguage = 'English';
     translatedLanguage = 'Russian';
-    untranslatedString = "";
-    translatedString = "";
+    untranslatedString = '';
+    translatedString = '';
   }
 
   _setPrefs() async {
@@ -70,7 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffededed),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -149,9 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                hintText: "Write something ...",
-                filled: true,
-                fillColor: Colors.white,
+                hintText: 'Write something ...',
               ),
             ),
             const Divider(),
@@ -237,8 +234,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     translator
         .translate(input,
-            from: languageMap[untranslatedLanguage] ?? "en",
-            to: languageMap[translatedLanguage] ?? "ru")
+            from: languageMap[untranslatedLanguage] ?? 'en',
+            to: languageMap[translatedLanguage] ?? 'ru')
         .then((value) {
       setState(() {
         translatedString = value.text;
