@@ -140,10 +140,13 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onSubmitted: ((value) {
                 setState(() {
-                  _addToRecentTranslations(value);
+                  if (translatedString.isNotEmpty) {
+                    _addToRecentTranslations(value);
+                  }
                 });
               }),
               decoration: InputDecoration(
+                filled: true,
                 enabledBorder: InputBorder.none,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),

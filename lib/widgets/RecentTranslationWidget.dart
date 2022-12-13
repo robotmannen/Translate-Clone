@@ -5,9 +5,10 @@ class RecentTranslationWidget extends StatefulWidget {
   final TranslationItem translationItem;
   final Function(bool) handleFavouriteOnPressed;
 
-  const RecentTranslationWidget({super.key,
-    required this.translationItem,
-    required this.handleFavouriteOnPressed});
+  const RecentTranslationWidget(
+      {super.key,
+      required this.translationItem,
+      required this.handleFavouriteOnPressed});
 
   @override
   State<StatefulWidget> createState() => _RecentTranslationWidgetState();
@@ -18,7 +19,10 @@ class _RecentTranslationWidgetState extends State<RecentTranslationWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.white
+            : Colors.white10,
         shape: BoxShape.rectangle,
       ),
       padding: const EdgeInsets.all(15.0),
@@ -33,7 +37,7 @@ class _RecentTranslationWidgetState extends State<RecentTranslationWidget> {
                   onPressed: () {
                     setState(() {
                       widget.translationItem.isFavourite =
-                      !widget.translationItem.isFavourite;
+                          !widget.translationItem.isFavourite;
 
                       widget.handleFavouriteOnPressed(
                           widget.translationItem.isFavourite);
