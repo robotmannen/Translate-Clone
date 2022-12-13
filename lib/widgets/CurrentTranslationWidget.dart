@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../TranslationItem.dart';
+import '../models/TranslationItem.dart';
 
 class CurrentTranslationWidget extends StatefulWidget {
 
   final TranslationItem translationItem;
   final String translatedLanguage;
-
   final Function(bool) handleFavouriteOnPressed;
 
   const CurrentTranslationWidget({super.key,

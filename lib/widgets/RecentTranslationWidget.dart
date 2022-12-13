@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:translate_clone/TranslationItem.dart';
+import 'package:translate_clone/models/TranslationItem.dart';
 
 class RecentTranslationWidget extends StatefulWidget {
   final TranslationItem translationItem;
@@ -35,6 +35,7 @@ class _RecentTranslationWidgetState extends State<RecentTranslationWidget> {
                     setState(() {
                       widget.translationItem.isFavourite =
                       !widget.translationItem.isFavourite;
+
                       widget.handleFavouriteOnPressed(
                           widget.translationItem.isFavourite);
                     });
